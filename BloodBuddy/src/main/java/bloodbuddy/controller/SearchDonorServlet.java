@@ -12,7 +12,7 @@ public class SearchDonorServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    // ✅ Updated Donor model without phone number
+    //  Donor model without phone number for privacy concerns
     public static class Donor {
         private String name, bloodGroup, location, employeeId;
 
@@ -46,7 +46,7 @@ public class SearchDonorServlet extends HttpServlet {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(url, user, password);
 
-            // ✅ Only select what's needed (no phone number)
+            //  Only select what's needed (no phone number)
             String sql = "SELECT name, blood_group, location, employee_id FROM donors WHERE blood_group = ? AND location LIKE ? AND consent = 1";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, bloodGroup);
@@ -69,7 +69,7 @@ public class SearchDonorServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        // ✅ Forward updated donor list to new results.jsp layout
+        //  Forward updated donor list to new results.jsp layout
         request.setAttribute("donors", donorList);
         request.getRequestDispatcher("results.jsp").forward(request, response);
     }
