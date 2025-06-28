@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Register as a Blood Donor</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #fff7f7;
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    h2 {
+      color: #c62828;
+      text-align: center;
+    }
+
+    .form-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: calc(100vh - 140px);
+      margin-top: 20px;
+    }
+
+    form {
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      width: 320px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 8px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    .consent-label {
+      font-weight: normal;
+      font-size: 14px;
+    }
+
+    button {
+      background-color: #c62828;
+      color: white;
+      padding: 10px;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #a91d1d;
+    }
+
+    #toast {
+      visibility: hidden;
+      min-width: 280px;
+      margin-left: -140px;
+      background-color: #323232;
+      color: #fff;
+      text-align: center;
+      border-radius: 4px;
+      padding: 16px;
+      position: fixed;
+      z-index: 1;
+      left: 50%;
+      bottom: 30px;
+      font-size: 16px;
+      opacity: 0;
+      transition: opacity 0.5s ease, bottom 0.5s ease;
+    }
+
+    #toast.show {
+      visibility: visible;
+      opacity: 1;
+      bottom: 50px;
+    }
+
+    .nav-link {
+      margin-top: 30px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Donor Registration</h2>
+
+  <div class="form-wrapper">
+    <form action="/BloodBuddy/RegisterDonorServlet" method="post">
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="blood_group">Blood Group:</label>
+      <select id="blood_group" name="blood_group" required>
+        <option value="">--Select--</option>
+        <option value="O+">O+</option>
+        <option value="O-">O-</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="B+">B+</option>
+        <option value="B-">B-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
+      </select>
+
+      <label for="location">Location:</label>
+      <input type="text" id="location" name="location" required>
+
+      <label for="employee_id">Employee ID:</label>
+      <input type="text" id="employee_id" name="employee_id" required>
+
+      <label for="phone">Phone Number:</label>
+      <input type="tel" id="phone" name="phone_number" pattern="[0-9]{10}" required>
+
+      <label class="consent-label">
+        <input type="checkbox" name="consent" required>
+        I agree to be contacted in case of emergencies and allow my details to be used by BloodBuddy for internal donor matching.
+      </label>
+
+      <button type="submit">Register</button>
+    </form>
+  </div>
+
+  <div class="nav-link">
+    <a href="index.html">🏠 Back to Home</a>
+    <span style="margin: 0 10px;">|</span>
+    <a href="search.html">🔍 Find Donor</a>
+  </div>
+
+  <div id="toast">🎉 Donor registered successfully!</div>
+
+  <script>
+    function showToast(message) {
+      const x = document.getElementById("toast");
+      x.innerText = message;
+      x.className = "show";
+      setTimeout(() => { x.className = x.className.replace("show", ""); }, 3000);
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const toastType = params.get("toast");
+
+    if (toastType === "true") {
+      window.onload = () => {
+        showToast("🎉 Donor registered successfully!");
+        window.history.replaceState({}, document.title, window.location.pathname);
+      };
+    } else if (toastType === "duplicate") {
+      window.onload = () => {
+        showToast("⚠️ Donor already registered!");
+        window.history.replaceState({}, document.title, window.location.pathname);
+      };
+    } else if (toastType === "fail") {
+      window.onload = () => {
+        showToast("❌ Something went wrong. Please try again.");
+        window.history.replaceState({}, document.title, window.location.pathname);
+      };
+    }
+  </script>
+
+</body>
+</html>

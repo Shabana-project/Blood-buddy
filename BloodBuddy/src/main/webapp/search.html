@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Search Donors | BloodBuddy</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #fff3f3 0%, #ffffff 100%);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .form-container {
+      background: #fff;
+      max-width: 550px;
+      width: 90%;
+      padding: 50px 40px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #cc0000;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #cc0000;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #a80000;
+    }
+
+    .nav-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .nav-link a {
+      text-decoration: none;
+      color: #cc0000;
+      font-weight: bold;
+      margin: 0 10px;
+    }
+
+    .nav-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Find a Donor</h2>
+    <form action="SearchDonorServlet" method="post">
+      <label for="blood_group">Blood Group:</label>
+      <select id="blood_group" name="blood_group" required>
+        <option value="">-- Select --</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="B+">B+</option>
+        <option value="B-">B-</option>
+        <option value="O+">O+</option>
+        <option value="O-">O-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
+      </select>
+
+      <label for="location">Location:</label>
+      <input type="text" id="location" name="location" placeholder="Enter location" required>
+
+      <button type="submit">Search</button>
+    </form>
+
+    <div class="nav-link">
+      <a href="index.html">🏠 Back to Home</a> |
+      <a href="register.html">Register as Donor</a>
+    </div>
+  </div>
+
+</body>
+</html>
