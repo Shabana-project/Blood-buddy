@@ -12,24 +12,25 @@ public class SearchDonorServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    //  Donor model without phone number for privacy concerns
+    // Donor model now includes phone number
     public static class Donor {
-        private String name, bloodGroup, location, employeeId;
+        private String name, bloodGroup, location, employeeId, phone;
 
-        public Donor(String name, String bloodGroup, String location, String employeeId) {
+        public Donor(String name, String bloodGroup, String location, String employeeId, String phone) {
             this.name = name;
             this.bloodGroup = bloodGroup;
             this.location = location;
             this.employeeId = employeeId;
+            this.phone = phone;
         }
 
         public String getName() { return name; }
         public String getBloodGroup() { return bloodGroup; }
         public String getLocation() { return location; }
         public String getEmployeeId() { return employeeId; }
+        public String getPhone() { return phone; }
     }
 
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -46,8 +47,7 @@ public class SearchDonorServlet extends HttpServlet {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(url, user, password);
 
-            //  Only select what's needed (no phone number)
-            String sql = "SELECT name, blood_group, location, employee_id FROM donors WHERE blood_group = ? AND location LIKE ? AND consent = 1";
+            String sql = "SELECT name, blood_group, location, employee_id, phone_number FROM donors WHERE blood_group = ? AND location LIKE ? AND consent = 1";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, bloodGroup);
             stmt.setString(2, "%" + location + "%");
@@ -56,10 +56,11 @@ public class SearchDonorServlet extends HttpServlet {
 
             while (rs.next()) {
                 donorList.add(new Donor(
-                        rs.getString("name"),
-                        rs.getString("blood_group"),
-                        rs.getString("location"),
-                        rs.getString("employee_id")
+                    rs.getString("name"),
+                    rs.getString("blood_group"),
+                    rs.getString("location"),
+                    rs.getString("employee_id"),
+                    rs.getString("phone_number")
                 ));
             }
 
@@ -69,8 +70,10 @@ public class SearchDonorServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        //  Forward updated donor list to new results.jsp layout
         request.setAttribute("donors", donorList);
+        request.setAttribute("blood_group", bloodGroup);
+        request.setAttribute("location", location);
+
         request.getRequestDispatcher("results.jsp").forward(request, response);
     }
 }
