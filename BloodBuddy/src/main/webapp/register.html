@@ -28,7 +28,7 @@
       padding: 20px;
       background-color: #fff;
       border: 1px solid #ddd;
-      width: 320px;
+      width: 340px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
@@ -66,7 +66,6 @@
     #toast {
       visibility: hidden;
       min-width: 280px;
-      margin-left: -140px;
       background-color: #323232;
       color: #fff;
       text-align: center;
@@ -79,6 +78,7 @@
       font-size: 16px;
       opacity: 0;
       transition: opacity 0.5s ease, bottom 0.5s ease;
+      transform: translateX(-50%);
     }
 
     #toast.show {
@@ -99,8 +99,17 @@
 
   <div class="form-wrapper">
     <form action="/BloodBuddy/RegisterDonorServlet" method="post">
+
       <label for="name">Full Name:</label>
-      <input type="text" id="name" name="name" required>
+      <input type="text"
+             id="name"
+             name="name"
+             pattern="[A-Za-z\s]{3,50}"
+             minlength="3"
+             maxlength="50"
+             required
+             placeholder="Enter your name"
+             title="Letters and spaces only (min 3 characters)">
 
       <label for="blood_group">Blood Group:</label>
       <select id="blood_group" name="blood_group" required>
@@ -115,14 +124,46 @@
         <option value="AB-">AB-</option>
       </select>
 
-      <label for="location">Location:</label>
-      <input type="text" id="location" name="location" required>
+      <label for="location">HCL Office Location:</label>
+      <select id="location" name="location" required>
+        <option value="">-- Select Location --</option>
+        <option value="Bengaluru">Bengaluru</option>
+        <option value="Chennai">Chennai</option>
+        <option value="Noida">Noida</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Pune">Pune</option>
+        <option value="Kolkata">Kolkata</option>
+        <option value="Nagpur">Nagpur</option>
+        <option value="Lucknow">Lucknow</option>
+        <option value="Gurgaon">Gurgaon</option>
+        <option value="Madurai">Madurai</option>
+        <option value="Coimbatore">Coimbatore</option>
+        <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+        <option value="Vijayawada">Vijayawada</option>
+      </select>
 
       <label for="employee_id">Employee ID:</label>
-      <input type="text" id="employee_id" name="employee_id" required>
+      <input type="text"
+             id="employee_id"
+             name="employee_id"
+             pattern="\d{1,8}"
+             maxlength="8"
+             required
+             placeholder="Employee ID"
+             title="Enter up to 8 digit numeric ID">
 
       <label for="phone">Phone Number:</label>
-      <input type="tel" id="phone" name="phone_number" pattern="[0-9]{10}" required>
+      <input type="tel"
+             id="phone"
+             name="phone_number"
+             pattern="\d{10}"
+             minlength="10"
+             maxlength="10"
+             required
+             inputmode="numeric"
+             placeholder="Enter 10-digit Phone Number"
+             title="Enter exactly 10 digits (e.g. 9876543210)"
+             oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)">
 
       <label class="consent-label">
         <input type="checkbox" name="consent" required>
@@ -143,10 +184,12 @@
 
   <script>
     function showToast(message) {
-      const x = document.getElementById("toast");
-      x.innerText = message;
-      x.className = "show";
-      setTimeout(() => { x.className = x.className.replace("show", ""); }, 3000);
+      const toast = document.getElementById("toast");
+      toast.innerText = message;
+      toast.className = "show";
+      setTimeout(() => {
+        toast.className = toast.className.replace("show", "");
+      }, 3000);
     }
 
     const params = new URLSearchParams(window.location.search);

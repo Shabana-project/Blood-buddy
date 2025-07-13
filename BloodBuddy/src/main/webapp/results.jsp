@@ -47,6 +47,7 @@
       padding: 12px;
       text-align: left;
       border-bottom: 1px solid #ddd;
+      vertical-align: top;
     }
 
     th {
@@ -58,6 +59,18 @@
       background-color: #f9f9f9;
     }
 
+    input, textarea {
+      width: 96%;
+      padding: 6px;
+      margin: 4px 0;
+      border: 1px solid #ccc;
+      font-size: 13px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
     button {
       background-color: #c62828;
       color: white;
@@ -66,6 +79,8 @@
       font-size: 14px;
       border-radius: 6px;
       cursor: pointer;
+      margin-top: 6px;
+      width: 100%;
     }
 
     button:hover {
@@ -98,32 +113,26 @@
       font-size: 12px;
       box-shadow: 0 0 6px rgba(0,0,0,0.08);
     }
+
+    .form-box {
+      margin-top: 6px;
+    }
   </style>
 </head>
 <body>
 
   <div class="results-container">
     <h2>Matching Donors</h2>
-    <p class="subheading">Here are your life-saving matches. Contact responsibly.</p>
+    <p class="subheading">Here are your life-saving matches. Request contact to proceed securely.</p>
 
     <%
       List<Donor> donors = (List<Donor>) request.getAttribute("donors");
-      String smsSentTo = (String) session.getAttribute("smsSentTo");
-      String fromSMS = request.getParameter("fromSMS");
 
-      if (smsSentTo != null && fromSMS != null) {
-    %>
-      <div class="sms-label" style="font-weight: bold; margin-bottom: 20px;">
-        📩 SMS sent successfully to <%= smsSentTo %>. Contact them responsibly. Good luck!
-      </div>
-    <%
-      }
-
-      if ((donors == null || donors.isEmpty()) && (smsSentTo == null || fromSMS == null)) {
+      if (donors == null || donors.isEmpty()) {
     %>
       <p>No donors found for the selected blood group and location.</p>
     <%
-      } else if (donors != null && !donors.isEmpty()) {
+      } else {
     %>
     <table>
       <tr>
@@ -131,8 +140,7 @@
         <th>Blood Group</th>
         <th>Location</th>
         <th>Employee ID</th>
-        <th>Phone Number</th>
-        <th>Action</th>
+        <th>Request Contact</th>
       </tr>
       <%
         for (Donor d : donors) {
@@ -142,23 +150,25 @@
         <td><%= d.getBloodGroup() %></td>
         <td><%= d.getLocation() %></td>
         <td><%= d.getEmployeeId() %></td>
-        <td><%= d.getPhone() %></td>
         <td>
-          <form action="RequestContactServlet" method="post">
+          <form action="RequestContactServlet" method="post" class="form-box">
+            <input type="hidden" name="actionType" value="request">
+            <input type="hidden" name="donorId" value="<%= d.getEmployeeId() %>">
             <input type="hidden" name="donorName" value="<%= d.getName() %>">
             <input type="hidden" name="donorPhone" value="<%= d.getPhone() %>">
-            <button type="submit">📩 Send SMS</button>
+            <input type="hidden" name="blood_group" value="<%= d.getBloodGroup() %>">
+            <input type="hidden" name="location" value="<%= d.getLocation() %>">
+
+            <input type="text" name="requestor_name" placeholder="Your Name" required>
+            <input type="text" name="requestor_empid" pattern="\d{1,8}" maxlength="8" required placeholder="Employee ID">
+            <textarea name="reason" placeholder="Reason for contact (optional)" rows="2"></textarea>
+
+            <button type="submit">📩 Request Contact</button>
           </form>
-          <% if (smsSentTo != null && smsSentTo.equals(d.getName())) { %>
-            <div class="sms-label">
-              ✅ Message sent securely. Contact donor responsibly. Good luck!
-            </div>
-          <% } %>
         </td>
       </tr>
       <%
         }
-        session.removeAttribute("smsSentTo");
       %>
     </table>
     <%

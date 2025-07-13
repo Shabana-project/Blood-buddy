@@ -47,10 +47,11 @@ public class SearchDonorServlet extends HttpServlet {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(url, user, password);
 
-            String sql = "SELECT name, blood_group, location, employee_id, phone_number FROM donors WHERE blood_group = ? AND location LIKE ? AND consent = 1";
+            String sql = "SELECT name, blood_group, location, employee_id, phone_number FROM donors WHERE blood_group = ? AND location = ? AND consent = 1";
+
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, bloodGroup);
-            stmt.setString(2, "%" + location + "%");
+            stmt.setString(2, location);
 
             ResultSet rs = stmt.executeQuery();
 
