@@ -105,12 +105,13 @@
     }
 
     .sms-label {
-      background-color: #d4edda;
-      color: #155724;
+      background-color: #ffe6e6;
+      color: #c62828;
       padding: 8px 12px;
       border-radius: 4px;
       margin-top: 6px;
       font-size: 12px;
+      font-weight: bold;
       box-shadow: 0 0 6px rgba(0,0,0,0.08);
     }
 
@@ -124,9 +125,21 @@
   <div class="results-container">
     <h2>Matching Donors</h2>
     <p class="subheading">Here are your life-saving matches. Request contact to proceed securely.</p>
+    <%
+  Integer total = (Integer) request.getAttribute("totalDonors");
+  if (total != null) {
+%>
+  <p style="text-align: center; font-size: 14px; color: #555;">
+     <strong>Total Matching Donors:</strong> <%= total %>
+  </p>
+<%
+  }
+%>
+    
 
     <%
       List<Donor> donors = (List<Donor>) request.getAttribute("donors");
+      Map<String, Boolean> alreadyRequestedMap = (Map<String, Boolean>) request.getAttribute("alreadyRequestedMap");
 
       if (donors == null || donors.isEmpty()) {
     %>
@@ -144,6 +157,8 @@
       </tr>
       <%
         for (Donor d : donors) {
+          boolean isAlreadyRequested = (alreadyRequestedMap != null) && 
+                                       (alreadyRequestedMap.getOrDefault(d.getEmployeeId(), false));
       %>
       <tr>
         <td><%= d.getName() %></td>
@@ -151,20 +166,24 @@
         <td><%= d.getLocation() %></td>
         <td><%= d.getEmployeeId() %></td>
         <td>
-          <form action="RequestContactServlet" method="post" class="form-box">
-            <input type="hidden" name="actionType" value="request">
-            <input type="hidden" name="donorId" value="<%= d.getEmployeeId() %>">
-            <input type="hidden" name="donorName" value="<%= d.getName() %>">
-            <input type="hidden" name="donorPhone" value="<%= d.getPhone() %>">
-            <input type="hidden" name="blood_group" value="<%= d.getBloodGroup() %>">
-            <input type="hidden" name="location" value="<%= d.getLocation() %>">
+          <% if (isAlreadyRequested) { %>
+            <div class="sms-label"> Already contacted by you. Please try another donor.</div>
+          <% } else { %>
+            <form action="RequestContactServlet" method="post" class="form-box">
+              <input type="hidden" name="actionType" value="request">
+              <input type="hidden" name="donorId" value="<%= d.getEmployeeId() %>">
+              <input type="hidden" name="donorName" value="<%= d.getName() %>">
+              <input type="hidden" name="donorPhone" value="<%= d.getPhone() %>">
+              <input type="hidden" name="blood_group" value="<%= d.getBloodGroup() %>">
+              <input type="hidden" name="location" value="<%= d.getLocation() %>">
 
-            <input type="text" name="requestor_name" placeholder="Your Name" required>
-            <input type="text" name="requestor_empid" pattern="\d{1,8}" maxlength="8" required placeholder="Employee ID">
-            <textarea name="reason" placeholder="Reason for contact (optional)" rows="2"></textarea>
+              <input type="text" name="requestor_name" placeholder="Your Name" required>
+              <input type="text" name="requestor_empid" pattern="\d{1,8}" maxlength="8" required placeholder="Employee ID">
+              <textarea name="reason" placeholder="Reason for contact (optional)" rows="2"></textarea>
 
-            <button type="submit">📩 Request Contact</button>
-          </form>
+              <button type="submit">📩 Request Contact</button>
+            </form>
+          <% } %>
         </td>
       </tr>
       <%

@@ -43,10 +43,12 @@ public class RegisterDonorServlet extends HttpServlet {
             Connection conn = DriverManager.getConnection(url, user, password);
 
             // Duplicate check
-            String checkSql = "SELECT * FROM donors WHERE name = ? AND phone_number = ?";
+            String checkSql = "SELECT * FROM donors WHERE (name = ? AND phone_number = ?) OR employee_id = ?";
             PreparedStatement checkStmt = conn.prepareStatement(checkSql);
             checkStmt.setString(1, name);
             checkStmt.setString(2, phone);
+            checkStmt.setString(3, empId); // Make sure employeeId is declared and captured from the form
+
             ResultSet rs = checkStmt.executeQuery();
 
             if (rs.next()) {
@@ -54,6 +56,7 @@ public class RegisterDonorServlet extends HttpServlet {
                 response.sendRedirect("register.html?toast=duplicate");
                 return;
             }
+
 
             // Insert donor
             String sql = "INSERT INTO donors (name, blood_group, location, phone_number, employee_id, consent) VALUES (?, ?, ?, ?, ?, ?)";

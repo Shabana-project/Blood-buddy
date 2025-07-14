@@ -153,17 +153,18 @@
              title="Enter up to 8 digit numeric ID">
 
       <label for="phone">Phone Number:</label>
-      <input type="tel"
-             id="phone"
-             name="phone_number"
-             pattern="\d{10}"
-             minlength="10"
-             maxlength="10"
-             required
-             inputmode="numeric"
-             placeholder="Enter 10-digit Phone Number"
-             title="Enter exactly 10 digits (e.g. 9876543210)"
-             oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)">
+<input type="tel"
+       id="phone"
+       name="phone_number"
+       pattern="[1-9]{1}[0-9]{9}"
+       minlength="10"
+       maxlength="10"
+       required
+       inputmode="numeric"
+       placeholder="Enter 10-digit Phone Number"
+       title="Enter a valid 10-digit number (cannot start with 0)"
+       oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)">
+
 
       <label class="consent-label">
         <input type="checkbox" name="consent" required>

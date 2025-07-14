@@ -74,6 +74,9 @@ public class SearchDonorServlet extends HttpServlet {
         request.setAttribute("donors", donorList);
         request.setAttribute("blood_group", bloodGroup);
         request.setAttribute("location", location);
+        request.setAttribute("totalDonors", donorList.size());
+        getServletContext().setAttribute("lastSearchResults", donorList);
+
 
         request.getRequestDispatcher("results.jsp").forward(request, response);
     }
