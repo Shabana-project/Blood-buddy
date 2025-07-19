@@ -72,7 +72,7 @@ public class RequestContactServlet extends HttpServlet {
             String donorPhone = request.getParameter("donorPhone");
 
             try {
-                String apiKey = "VCw8odQev3MF2TCKrOFETAB9ewtqP4OL6aVGH98I0PGfCcLxBn9GxcoXHM6F";
+                String apiKey = "akEdtP8ryMutWzYbugXWnbgPHOEXNqWTpn7J571kkvaYZLvw4AQybDvYpu91";
                 String message = "Hi " + donorName + ",\nA BloodBuddy user is trying to reach you.\nPlease expect a call soon.";
                 String encodedMessage = URLEncoder.encode(message, "UTF-8");
 

@@ -12,7 +12,7 @@ public class SearchDonorServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    // Donor model now includes phone number
+    // Donor model 
     public static class Donor {
         private String name, bloodGroup, location, employeeId, phone;
 

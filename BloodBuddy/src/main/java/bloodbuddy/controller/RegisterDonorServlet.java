@@ -47,7 +47,7 @@ public class RegisterDonorServlet extends HttpServlet {
             PreparedStatement checkStmt = conn.prepareStatement(checkSql);
             checkStmt.setString(1, name);
             checkStmt.setString(2, phone);
-            checkStmt.setString(3, empId); // Make sure employeeId is declared and captured from the form
+            checkStmt.setString(3, empId); // Makes sure employeeId is declared and captured from the form
 
             ResultSet rs = checkStmt.executeQuery();
 
